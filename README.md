@@ -60,7 +60,7 @@ AI 助手包含项目内实现的只读工具注册与调用逻辑。LangChain4j
 1. 克隆仓库并进入主应用目录：
 
    ```powershell
-   git clone --branch github-clean https://github.com/LazySheep111/jingjie.git
+   git clone https://github.com/LazySheep111/jingjie.git
    Set-Location .\jingjie\novel
    ```
 
