@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>镜界 · AI 助手只读工具示意</title>
+  <style>
+    :root {
+      --ink: #162827;
+      --muted: #70817c;
+      --line: #dbe5df;
+      --paper: #fbfcf8;
+      --panel: #ffffff;
+      --soft: #f0f4ee;
+      --accent: #51745a;
+      --accent-deep: #345640;
+      --accent-pale: #e3eee3;
+      --warm: #d88947;
+      --shadow: 0 18px 45px rgba(37, 61, 48, .10);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #eef2ed;
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .app-shell { min-height: 100vh; display: grid; grid-template-columns: 238px minmax(0, 1fr); }
+    .sidebar {
+      color: #eaf1ea;
+      background: #17332f;
+      padding: 25px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    .brand { padding: 0 10px 21px; border-bottom: 1px solid rgba(234, 241, 234, .18); }
+    .brand strong { display: block; font-size: 24px; letter-spacing: .08em; }
+    .brand span { display: block; color: #afc9bb; font-size: 12px; margin-top: 7px; }
+    .nav { display: grid; gap: 7px; }
+    .nav button {
+      border: 0; color: #bfd3c8; background: transparent; text-align: left; padding: 13px 12px;
+      border-radius: 11px; transition: .2s ease;
+    }
+    .nav button:hover, .nav button.active { background: #2e5c4b; color: #fff; }
+    .sidebar-note { margin-top: auto; color: #91afa0; font-size: 12px; line-height: 1.65; padding: 0 10px 5px; }
+    .main { min-width: 0; display: flex; flex-direction: column; }
+    .topbar {
+      height: 86px; display: flex; align-items: center; justify-content: space-between;
+      gap: 20px; padding: 0 34px; background: rgba(255,255,255,.92); border-bottom: 1px solid var(--line);
+    }
+    .eyebrow { color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .1em; }
+    .topbar h1 { margin: 4px 0 0; font-size: 22px; letter-spacing: -.03em; }
+    .top-actions { display: flex; gap: 10px; align-items: center; }
+    .quiet-button, .assistant-button {
+      border-radius: 10px; padding: 10px 15px; border: 1px solid var(--line); background: var(--soft); color: var(--accent-deep); font-weight: 700;
+    }
+    .assistant-button { border-color: var(--accent); background: var(--accent); color: #fff; box-shadow: 0 8px 18px rgba(81,116,90,.22); }
+    .workspace { min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 0; transition: grid-template-columns .28s ease; }
+    .workspace.open { grid-template-columns: minmax(0, 1fr) 375px; }
+    .content { padding: 34px; min-width: 0; }
+    .context-strip { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+    .context-title h2 { margin: 0; font-size: 32px; letter-spacing: -.05em; }
+    .context-title p { margin: 8px 0 0; color: var(--muted); }
+    .context-tag { background: var(--accent-pale); color: var(--accent-deep); border-radius: 999px; padding: 8px 13px; font-size: 12px; font-weight: 800; white-space: nowrap; }
+    .switcher { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
+    .switcher button { border: 1px solid var(--line); background: var(--panel); color: var(--muted); padding: 13px 10px; border-radius: 11px; text-align: left; }
+    .switcher button strong { display:block; color: var(--ink); font-size: 13px; margin-bottom: 5px; }
+    .switcher button.active { background: var(--accent); border-color: var(--accent); color: #e8f1e7; }
+    .switcher button.active strong { color: #fff; }
+    .dashboard-grid { display:grid; grid-template-columns: 1.35fr .85fr; gap: 18px; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 15px; box-shadow: var(--shadow); }
+    .card-head { padding: 20px 22px 15px; display:flex; align-items:center; justify-content:space-between; gap: 16px; border-bottom: 1px solid var(--line); }
+    .card-head h3 { margin:0; font-size: 16px; }
+    .card-head small { color: var(--muted); }
+    .chapter-list { padding: 9px 12px 14px; }
+    .chapter { display:flex; align-items:center; justify-content:space-between; gap:14px; padding: 13px 10px; border-radius: 10px; }
+    .chapter + .chapter { border-top: 1px solid #edf1ec; }
+    .chapter:hover { background: var(--soft); }
+    .chapter strong { font-size: 13px; }
+    .chapter span { color: var(--muted); font-size: 12px; }
+    .status { border-radius:999px; padding: 5px 8px; background:#e3eee3; color:var(--accent-deep); font-size:11px; font-weight:800; }
+    .status.muted { background:#f2f4f0; color:#89958d; }
+    .summary { padding: 21px 22px; }
+    .metric { display:flex; justify-content:space-between; gap:16px; padding: 12px 0; border-bottom:1px solid #edf1ec; }
+    .metric:last-child { border-bottom:0; }
+    .metric span { color:var(--muted); font-size:13px; }
+    .metric strong { font-size:15px; }
+    .assistant-panel { min-width: 0; overflow: hidden; background: #f7faf6; border-left: 1px solid var(--line); }
+    .assistant-inner { width: 375px; height: 100%; display:flex; flex-direction:column; }
+    .assistant-head { padding: 23px 22px 17px; border-bottom:1px solid var(--line); background:#fff; }
+    .assistant-head-row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .assistant-head h2 { margin:0; font-size:18px; }
+    .close-button { border:0; background:transparent; color:var(--muted); font-size:20px; padding:4px; }
+    .assistant-head p { margin: 10px 0 0; color:var(--muted); font-size:12px; line-height:1.6; }
+    .context-card { margin: 16px 18px 0; padding: 13px 14px; background: var(--soft); border:1px solid var(--line); border-radius:11px; }
+    .context-card span { color:var(--muted); font-size:11px; }
+    .context-card strong { display:block; margin-top:4px; font-size:13px; }
+    .messages { flex:1; overflow:auto; padding: 18px; display:grid; align-content:start; gap: 13px; }
+    .message { max-width: 93%; padding: 13px 14px; border-radius: 13px; font-size:13px; line-height:1.7; }
+    .message.user { justify-self:end; background:var(--accent); color:#fff; border-bottom-right-radius:4px; }
+    .message.ai { background:#fff; border:1px solid var(--line); border-bottom-left-radius:4px; }
+    .tool-card { margin-top:10px; padding-top:10px; border-top:1px solid #e5ece4; }
+    .tool-card strong { display:block; color:var(--accent-deep); font-size:11px; }
+    .tool-card span { color:var(--muted); font-size:11px; }
+    .suggestions { display:flex; flex-wrap:wrap; gap:7px; padding: 0 18px 13px; }
+    .suggestions button { border:1px solid var(--line); border-radius:999px; background:#fff; color:var(--accent-deep); padding:7px 9px; font-size:11px; }
+    .composer { padding: 13px 18px 18px; border-top:1px solid var(--line); background:#fff; }
+    .composer-row { display:flex; gap:8px; align-items:center; }
+    .composer input { flex:1; min-width:0; border:1px solid var(--line); background:#fbfcf8; border-radius:10px; padding:11px 12px; outline:none; }
+    .composer input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(81,116,90,.12); }
+    .send { border:0; border-radius:10px; padding:11px 13px; background:var(--accent); color:#fff; font-weight:700; }
+    .mobile-note { display:none; }
+    @media (max-width: 900px) {
+      .app-shell { grid-template-columns: 76px minmax(0,1fr); }
+      .sidebar { padding:20px 10px; }
+      .brand { padding:0 5px 18px; }
+      .brand strong { font-size:18px; }
+      .brand span, .nav button span, .sidebar-note { display:none; }
+      .nav button { text-align:center; padding:12px 5px; font-size:0; }
+      .nav button::before { content:'•'; font-size:22px; color:#b7d0bf; }
+      .topbar { padding:0 20px; }
+      .content { padding:22px 18px; }
+      .workspace.open { grid-template-columns: minmax(0,1fr) 330px; }
+      .assistant-inner { width:330px; }
+    }
+    @media (max-width: 680px) {
+      .topbar { height:auto; padding:16px; align-items:flex-start; }
+      .topbar h1 { font-size:18px; }
+      .quiet-button { display:none; }
+      .workspace, .workspace.open { display:block; }
+      .assistant-panel { position:fixed; inset:0; z-index:5; transform:translateX(100%); transition:transform .28s ease; }
+      .workspace.open .assistant-panel { transform:translateX(0); }
+      .assistant-inner { width:100%; }
+      .dashboard-grid { grid-template-columns:1fr; }
+      .switcher { grid-template-columns:repeat(2,1fr); }
+      .mobile-note { display:block; color:var(--muted); font-size:11px; margin-top:14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><strong>镜界</strong><span>AI 视频创作工作台</span></div>
+      <nav class="nav" aria-label="工作台导航">
+        <button><span>小说大纲工作台</span></button>
+        <button class="active"><span>小说全文工作台</span></button>
+        <button><span>我的历史作品</span></button>
+        <button><span>分镜脚本工作台</span></button>
+        <button><span>视频创作工作台</span></button>
+        <button><span>资产库</span></button>
+        <button><span>模型管理</span></button>
+      </nav>
+      <div class="sidebar-note">从故事到镜头，再到生成的视频输出。</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><div class="eyebrow">当前工作区</div><h1 id="workspace-title">小说全文工作台</h1></div>
+        <div class="top-actions"><button class="quiet-button">历史作品</button><button class="assistant-button" id="assistantToggle">打开 AI 助手</button></div>
+      </header>
+
+      <div class="workspace" id="workspace">
+        <section class="content">
+          <div class="context-strip"><div class="context-title"><h2>绝境逆袭：废柴的登顶之路</h2><p id="context-subtitle">当前小说 · 共 12 章 · 已选择第 1 章</p></div><span class="context-tag">只读上下文</span></div>
+          <div class="switcher" role="tablist">
+            <button class="active" data-view="全文"><strong>小说全文</strong>第 1 章 · 正文已生成</button>
+            <button data-view="大纲"><strong>小说大纲</strong>12 章 · 结构完整</button>
+            <button data-view="分镜"><strong>分镜脚本</strong>第 1 章 · 37 个分镜</button>
+            <button data-view="资产"><strong>人物与场景资产</strong>28 个资产</button>
+          </div>
+
+          <div class="dashboard-grid">
+            <section class="card"><div class="card-head"><h3 id="primary-title">章节目录</h3><small id="primary-hint">选择章节查看正文</small></div><div class="chapter-list" id="chapterList"></div></section>
+            <section class="card"><div class="card-head"><h3>当前工作状态</h3><span class="status">已就绪</span></div><div class="summary"><div class="metric"><span>小说状态</span><strong>全文已生成</strong></div><div class="metric"><span>分镜状态</span><strong>第 1 章已生成</strong></div><div class="metric"><span>资产状态</span><strong>28 个可用</strong></div><div class="metric"><span>最近更新</span><strong>刚刚</strong></div></div></section>
+          </div>
+          <p class="mobile-note">窄屏时 AI 助手会变为全屏抽屉，避免遮挡正文。</p>
+        </section>
+
+        <aside class="assistant-panel" aria-label="AI 创作助手">
+          <div class="assistant-inner">
+            <div class="assistant-head"><div class="assistant-head-row"><h2>AI 创作助手</h2><button class="close-button" id="assistantClose" aria-label="关闭助手">×</button></div><p>只读查询模式 · 可以了解当前作品、章节、分镜、资产和任务状态。</p></div>
+            <div class="context-card"><span>当前上下文</span><strong id="assistantContext">小说全文 · 第 1 章</strong></div>
+            <div class="messages" id="messages">
+              <div class="message user">这部小说现在生成到什么程度了？</div>
+              <div class="message ai">当前《绝境逆袭：废柴的登顶之路》共 12 章，全文已生成 12 章。第 1 章已有分镜脚本，资产库中有 28 个可用人物和场景资产。<div class="tool-card"><strong>已读取 3 个只读工具</strong><span>getNovelChapters · getLatestStoryboard · getVisualAssets</span></div></div>
+            </div>
+            <div class="suggestions"><button>当前章节有哪些人物？</button><button>分镜生成状态</button><button>资产库有多少场景？</button></div>
+            <form class="composer" id="composer"><div class="composer-row"><input id="prompt" placeholder="询问当前作品…" autocomplete="off"><button class="send" type="submit">发送</button></div></form>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+  <script>
+    const workspace = document.getElementById('workspace');
+    const toggle = document.getElementById('assistantToggle');
+    const close = document.getElementById('assistantClose');
+    const messages = document.getElementById('messages');
+    const prompt = document.getElementById('prompt');
+    const title = document.getElementById('workspace-title');
+    const subtitle = document.getElementById('context-subtitle');
+    const assistantContext = document.getElementById('assistantContext');
+    const chapterList = document.getElementById('chapterList');
+    const primaryTitle = document.getElementById('primary-title');
+    const primaryHint = document.getElementById('primary-hint');
+    const chapters = ['订婚宴上的退婚','玉佩觉醒','第一记耳光','慧眼识珠','拍卖会初露锋芒','赵宏的局'];
+    chapters.forEach((chapter, index) => {
+      const row = document.createElement('div'); row.className = 'chapter';
+      row.innerHTML = `<div><strong>第 ${index + 1} 章 · ${chapter}</strong><br><span>${index === 0 ? '当前查看' : '已生成正文'}</span></div><span class="status ${index === 0 ? '' : 'muted'}">${index === 0 ? '当前' : '已完成'}</span>`;
+      chapterList.appendChild(row);
+    });
+    toggle.addEventListener('click', () => { workspace.classList.add('open'); toggle.textContent = '收起 AI 助手'; });
+    close.addEventListener('click', () => { workspace.classList.remove('open'); toggle.textContent = '打开 AI 助手'; });
+    document.querySelectorAll('.switcher button').forEach(button => button.addEventListener('click', () => {
+      document.querySelectorAll('.switcher button').forEach(item => item.classList.remove('active'));
+      button.classList.add('active');
+      const view = button.dataset.view;
+      title.textContent = view === '全文' ? '小说全文工作台' : `${view}工作台`;
+      subtitle.textContent = `${view}上下文 · 当前小说《绝境逆袭：废柴的登顶之路》`;
+      assistantContext.textContent = `${view} · 当前小说第 1 章`;
+      primaryTitle.textContent = view === '资产' ? '人物与场景资产' : view === '分镜' ? '分镜列表' : view === '大纲' ? '章节大纲' : '章节目录';
+      primaryHint.textContent = view === '资产' ? '查询资产描述和复用状态' : '选择内容查看详情';
+    }));
+    document.querySelectorAll('.suggestions button').forEach(button => button.addEventListener('click', () => { prompt.value = button.textContent; prompt.focus(); }));
+    document.getElementById('composer').addEventListener('submit', event => {
+      event.preventDefault(); const value = prompt.value.trim(); if (!value) return;
+      const user = document.createElement('div'); user.className = 'message user'; user.textContent = value; messages.appendChild(user); prompt.value = '';
+      window.setTimeout(() => { const ai = document.createElement('div'); ai.className = 'message ai'; ai.innerHTML = '这是只读查询示意：我会调用对应的查询工具，读取当前工作区数据后返回结果。<div class="tool-card"><strong>工具调用已模拟</strong><span>不会修改小说、分镜或资产数据</span></div>'; messages.appendChild(ai); messages.scrollTop = messages.scrollHeight; }, 380);
+      messages.scrollTop = messages.scrollHeight;
+    });
+  </script>
+</body>
+</html>

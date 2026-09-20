@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的历史作品 · 新版预览</title>
+    <link rel="stylesheet" href="/studio/css/workbench-shell.css?v=20260919f">
+    <link rel="stylesheet" href="/studio/css/workbenches-new.css?v=20260918f">
+</head>
+<body class="studio-theme new-workbench-page" data-shell-page="history">
+<main>
+    <header class="new-workbench-header">
+        <div><p class="new-workbench-kicker">作品档案</p><h1>我的历史作品</h1><p class="hint">从已保存的小说继续进入正文、分镜和视频创作。</p></div>
+        <button id="refreshBtn" type="button">刷新作品</button>
+    </header>
+    <section class="project-list-stage">
+    <section class="new-workbench-panel">
+        <div class="new-workbench-toolbar"><div><h2>作品列表</h2><p class="new-workbench-help">按创建时间与生成状态快速定位项目。</p></div><span class="badge">历史记录</span></div>
+        <div id="historyList" class="history-list new-history-list"></div>
+        <div id="historyEmpty" class="new-workbench-empty" hidden>暂无历史作品。请先在小说大纲工作台生成或保存一部作品。</div>
+        <div class="pagination"><button id="prevPageBtn" type="button" class="secondary-button">上一页</button><span id="pageInfo">第 1 页</span><button id="nextPageBtn" type="button" class="secondary-button">下一页</button></div>
+    </section>
+    </section>
+</main>
+<script src="/js/history-list.js"></script>
+<script src="/studio/js/workbench-shell.js?v=20260918c"></script>
+<link rel="stylesheet" href="/studio/css/assistant-panel.css?v=20260919g">
+<script src="/studio/js/assistant-panel.js?v=20260919g"></script>
+</body>
+</html>

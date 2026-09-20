@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模型管理</title>
+    <script src="/studio/js/legacy-page-redirect.js?v=20260918"></script>
+    <link rel="stylesheet" href="/css/outline.css">
+    <link rel="stylesheet" href="/studio/css/workbench-shell.css?v=20260916">
+    <link rel="stylesheet" href="/studio/css/model-management.css">
+</head>
+<body class="studio-theme model-management-page" data-shell-page="model">
+<main>
+    <section class="model-page-heading">
+        <div>
+            <p class="eyebrow">系统设置 / 模型路由</p>
+            <h1>模型管理</h1>
+            <p class="model-page-lead">为文本、图像和视频创作绑定服务商。配置保存在服务端，API Key 仅以加密形式保存。</p>
+        </div>
+        <div class="model-security-note"><span class="security-dot"></span><span>密钥已加密存储</span></div>
+    </section>
+
+    <section class="model-overview" aria-label="模型配置概览">
+        <div><span class="overview-label">配置槽位</span><strong>3</strong><span>文本 · 图像 · 视频</span></div>
+        <div><span class="overview-label">配置优先级</span><strong>数据库</strong><span>未配置时回退到系统参数</span></div>
+        <div><span class="overview-label">测试策略</span><strong>低成本</strong><span>文本请求 1 token，图像/视频仅检测可达性</span></div>
+    </section>
+
+    <div id="modelPageStatus" class="model-page-status" role="status" aria-live="polite" hidden></div>
+    <section id="modelConfigGrid" class="model-config-grid" aria-label="AI 模型配置">
+        <div class="model-loading">正在读取模型配置…</div>
+    </section>
+    <p class="model-page-footnote">保存前会自动执行一次连接测试；测试失败不会覆盖当前启用配置。视频服务商需要同时提供任务提交地址和查询地址。首次保存前，请在服务端配置 32 字节的 <code>AI_CONFIG_ENCRYPTION_KEY</code>。</p>
+</main>
+<script src="/studio/js/api.js"></script>
+<script src="/studio/js/model-management.js"></script>
+<script src="/studio/js/workbench-shell.js?v=20260918b"></script>
+</body>
+</html>

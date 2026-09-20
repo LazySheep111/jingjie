@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>分镜制作控制台 · 方案示意</title>
+  <style>
+    :root { --canvas:#eef0ea; --paper:#fffefa; --ink:#202a29; --muted:#727a73; --line:#d8ddd4; --green:#536f4f; --green-dark:#354b34; --soft:#f4f6ef; --orange:#c77637; --danger:#a74439; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-width:320px; color:var(--ink); background:var(--canvas); font-family:-apple-system,"SF Pro Text","PingFang SC","Noto Sans SC",sans-serif; }
+    button, select { font:inherit; }
+    .app { display:grid; grid-template-columns:232px minmax(0,1fr); min-height:100dvh; }
+    .rail { display:flex; flex-direction:column; gap:22px; padding:26px 16px; color:#e9eee3; background:#1f2a29; }
+    .brand { padding:0 10px 20px; border-bottom:1px solid rgba(234,240,227,.13); }
+    .brand strong { display:block; font-size:23px; letter-spacing:-.06em; }
+    .brand span { display:block; margin-top:4px; color:#aec0ae; font-size:12px; }
+    .rail-label, .eyebrow { margin:0; color:#8ca789; font-size:11px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .scene-nav { display:grid; gap:6px; }
+    .scene-nav button { display:flex; justify-content:space-between; width:100%; border:0; border-radius:9px; padding:12px; color:#d5ded4; background:transparent; text-align:left; cursor:pointer; }
+    .scene-nav button:hover, .scene-nav button.active { color:#fffdf7; background:#425d40; }
+    .scene-nav small { color:#a9b7a8; }
+    .rail-foot { margin-top:auto; padding:13px 10px; border-radius:9px; background:rgba(255,255,255,.05); color:#b7c5b6; font-size:12px; line-height:1.6; }
+    main { min-width:0; padding:28px clamp(18px,3vw,46px) 44px; }
+    .topbar { display:flex; justify-content:space-between; align-items:flex-start; gap:24px; margin-bottom:24px; padding-bottom:19px; border-bottom:1px solid var(--line); }
+    h1, h2, h3, p { margin-top:0; }
+    h1 { margin-bottom:6px; font-size:clamp(27px,3vw,42px); letter-spacing:-.055em; }
+    .subtitle { margin:0; color:var(--muted); }
+    .chapter { display:inline-flex; align-items:center; min-height:32px; border:1px solid #d2dccd; border-radius:99px; padding:4px 12px; color:var(--green); background:#f6f8f2; font-size:13px; font-weight:750; white-space:nowrap; }
+    .scene-strip { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+    .scene-card { min-width:154px; flex:1 1 154px; border:1px solid var(--line); border-radius:10px; padding:12px 14px; background:rgba(255,255,255,.45); cursor:pointer; }
+    .scene-card:hover { border-color:#aebaac; }
+    .scene-card.active { border-color:var(--green); background:var(--green); color:#fffdf8; }
+    .scene-card small { display:block; margin-bottom:5px; font-size:11px; font-weight:800; letter-spacing:.08em; }
+    .scene-card strong { display:block; font-size:14px; }
+    .scene-card span { display:block; margin-top:5px; opacity:.74; font-size:12px; }
+    .workspace { display:grid; grid-template-columns:minmax(0,1fr) minmax(275px,.33fr); gap:16px; }
+    .content { display:grid; gap:16px; min-width:0; }
+    .info-grid { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(250px,.65fr); gap:16px; }
+    .panel { min-width:0; border:1px solid var(--line); border-radius:13px; background:var(--paper); box-shadow:0 10px 25px rgba(30,42,38,.055); }
+    .panel-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:16px 18px 12px; border-bottom:1px solid #e8ebe5; }
+    h2 { margin-bottom:4px; font-size:19px; letter-spacing:-.035em; }
+    h3 { margin-bottom:0; font-size:14px; }
+    .micro { margin:4px 0 0; color:var(--muted); font-size:12px; line-height:1.55; }
+    .tag { display:inline-flex; align-items:center; height:25px; border-radius:99px; padding:0 9px; background:#e8f0e6; color:var(--green); font-size:11px; font-weight:800; white-space:nowrap; }
+    .script { padding:14px 18px 17px; color:#34403d; font-family:"Songti SC","Noto Serif SC",serif; font-size:14px; line-height:1.76; }
+    .script p { margin:0 0 7px; }
+    .asset-list { display:grid; gap:10px; padding:13px 16px 16px; }
+    .asset { display:grid; grid-template-columns:37px minmax(0,1fr); align-items:center; gap:10px; border:1px solid #e1e5de; border-radius:9px; padding:10px; }
+    .asset-mark { display:grid; width:37px; height:37px; place-items:center; border-radius:8px; color:#f8fbf5; background:#788d6e; font-size:11px; font-weight:800; }
+    .asset strong, .asset span { display:block; }
+    .asset strong { font-size:13px; }
+    .asset span { margin-top:2px; color:var(--muted); font-size:11px; }
+    .frame-stage { overflow:hidden; }
+    .frame-empty { display:grid; min-height:196px; place-items:center; gap:10px; padding:26px; background:linear-gradient(135deg,#f8f9f4,#eef2e8); text-align:center; }
+    .frame-icon { display:grid; width:42px; height:42px; place-items:center; border:1px solid #bcc9b6; border-radius:11px; color:var(--green); background:#fffefa; font-size:18px; }
+    .frame-empty p { max-width:340px; margin:0; color:var(--muted); font-size:13px; line-height:1.65; }
+    .control { display:flex; min-width:0; flex-direction:column; border-radius:13px; overflow:hidden; color:#eef3e9; background:#24302d; box-shadow:0 10px 25px rgba(26,37,34,.16); }
+    .control-head { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; padding:18px; border-bottom:1px solid rgba(238,243,233,.12); }
+    .control h2 { color:#fffdf7; }
+    .control .micro { color:#bbc9b9; }
+    .status { display:inline-flex; align-items:center; gap:6px; border-radius:99px; padding:5px 9px; color:#dcebd8; background:#3b5140; font-size:11px; font-weight:800; }
+    .status::before { width:6px; height:6px; border-radius:50%; background:#b7cf74; content:""; }
+    .resolution { display:grid; gap:5px; color:#b9c8b8; font-size:11px; font-weight:800; }
+    select { min-width:86px; border:1px solid #596961; border-radius:8px; padding:8px; color:#edf2e9; background:#303d39; font-weight:750; }
+    .control-group { display:grid; gap:9px; padding:16px 18px; border-bottom:1px solid rgba(238,243,233,.12); }
+    .control-group > span { color:#aebfae; font-size:10px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; }
+    .button-row { display:flex; flex-wrap:wrap; gap:8px; }
+    .button { min-height:40px; border:1px solid transparent; border-radius:8px; padding:9px 11px; color:#203027; background:#f4f6ed; font-weight:800; cursor:pointer; }
+    .button.primary { width:100%; color:#fffdf7; background:var(--green); }
+    .button.primary:hover { background:#405c3c; }
+    .button.ghost { color:#e6eee4; border-color:#607160; background:transparent; }
+    .control-note { margin-top:auto; padding:15px 18px; color:#b8c6b5; background:#1c2623; font-size:12px; line-height:1.65; }
+    .control-note strong { color:#eef4e9; }
+    .legend { display:flex; flex-wrap:wrap; gap:14px; margin-top:22px; color:var(--muted); font-size:12px; }
+    .legend span { display:inline-flex; align-items:center; gap:6px; }
+    .dot { width:8px; height:8px; border-radius:50%; background:var(--green); }
+    .dot.soft { background:#c7d1c2; }
+    @media (max-width:1100px) { .workspace { grid-template-columns:1fr; } .control { min-height:0; } .control-group { grid-template-columns:1fr; } }
+    @media (max-width:800px) { .app { grid-template-columns:1fr; } .rail { display:none; } main { padding:20px 14px 30px; } .topbar { align-items:stretch; flex-direction:column; } .info-grid { grid-template-columns:1fr; } .scene-strip { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); } .scene-card { min-width:0; } }
+    @media (max-width:480px) { .scene-strip { grid-template-columns:1fr; } .button-row .button { flex:1 1 100%; } }
+  </style>
+</head>
+<body>
+  <div class="app" data-screen-label="video-production-console-preview">
+    <aside class="rail">
+      <div class="brand"><strong>镜界</strong><span>AI 视频创作工作台</span></div>
+      <div><p class="rail-label">当前章节 · 第 1 章</p><nav class="scene-nav" aria-label="分镜列表">
+        <button class="active" type="button" data-scene="01"><span>分镜 01<small> · 远景 → 中景</small></span><small>5 秒</small></button>
+        <button type="button" data-scene="02"><span>分镜 02<small> · 特写 → 近景</small></span><small>5 秒</small></button>
+        <button type="button" data-scene="03"><span>分镜 03<small> · 全景 → 近景</small></span><small>5 秒</small></button>
+        <button type="button" data-scene="04"><span>分镜 04<small> · 中景 → 近景</small></span><small>5 秒</small></button>
+      </nav></div>
+      <p class="rail-foot">分镜按照章节顺序排列。当前完成度：<strong>0 / 10</strong></p>
+    </aside>
+    <main>
+      <header class="topbar"><div><p class="eyebrow">视频创作 / 当前章节</p><h1>分镜制作控制台</h1><p class="subtitle">聚焦当前镜头：完成首帧选择后即可提交视频生成。</p></div><span class="chapter">作品 55 · 第 1 章</span></header>
+      <section class="scene-strip" aria-label="分镜快速切换">
+        <button class="scene-card active" type="button" data-scene="01"><small>分镜 01 · 当前</small><strong>远景 → 中景</strong><span>5 秒 · 首帧待生成</span></button>
+        <button class="scene-card" type="button" data-scene="02"><small>分镜 02</small><strong>特写 → 近景</strong><span>5 秒 · 尚未开始</span></button>
+        <button class="scene-card" type="button" data-scene="03"><small>分镜 03</small><strong>全景 → 近景</strong><span>5 秒 · 尚未开始</span></button>
+        <button class="scene-card" type="button" data-scene="04"><small>分镜 04</small><strong>中景 → 近景</strong><span>5 秒 · 尚未开始</span></button>
+      </section>
+      <section class="workspace">
+        <div class="content">
+          <div class="info-grid">
+            <article class="panel"><div class="panel-head"><div><h2>分镜脚本</h2><p class="micro">金鼎大酒店三楼宴会厅 · 夜</p></div><span class="tag">5 秒</span></div><div class="script"><p><strong>0:00–0:02｜远景 → 全景</strong> 金鼎大酒店三楼宴会厅，水晶灯高悬，宾客华服簇拥场景。</p><p>音效：轻音乐、杯盏低响。背景音乐：冷调弦乐铺底。</p><p><strong>0:02–0:05｜全景 → 中景</strong> 江辰穿洗得发白旧西装站在靠窗角落，攥着红色丝绒戒指盒。</p></div></article>
+            <article class="panel"><div class="panel-head"><div><h2>参考资产</h2><p class="micro">本镜头将自动带入提示词</p></div><span class="tag">2 项</span></div><div class="asset-list"><div class="asset"><span class="asset-mark">人</span><div><strong>人物 · 江辰</strong><span>三视图待补充</span></div></div><div class="asset"><span class="asset-mark">景</span><div><strong>场景 · 三楼宴会厅</strong><span>已关联当前镜头</span></div></div></div></article>
+          </div>
+          <article class="panel frame-stage"><div class="panel-head"><div><h2>分镜首帧</h2><p class="micro">生成后单击选择；双击查看大图</p></div><span class="tag">下一步</span></div><div class="frame-empty"><div class="frame-icon">□</div><h3>还没有可用首帧</h3><p>先生成或上传一张首帧。选中后，视频生成将使用这张画面作为起始帧。</p></div></article>
+        </div>
+        <aside class="control" aria-label="生成控制"><div class="control-head"><div><h2>生成控制</h2><p class="micro">分镜 01 · 远景 → 中景</p><span class="status">等待首帧</span></div><label class="resolution">视频分辨率<select><option>768P</option><option>1080P</option><option>2K</option></select></label></div><div class="control-group"><span>01 / 准备首帧</span><div class="button-row"><button class="button" type="button">生成首帧</button><button class="button" type="button">上传首帧</button></div></div><div class="control-group"><span>02 / 生成视频</span><button class="button primary" type="button">生成视频</button><div class="button-row"><button class="button ghost" type="button">上传视频</button><button class="button ghost" type="button">历史版本</button></div></div><div class="control-note"><strong>操作提示</strong><br>当前尚未选择首帧。完成第一步后，视频生成按钮将进入可用状态。</div></aside>
+      </section>
+      <footer class="legend"><span><i class="dot"></i> 当前选中分镜</span><span><i class="dot soft"></i> 未开始分镜</span><span>方案示意：不连接真实接口，不会提交或修改数据。</span></footer>
+    </main>
+  </div>
+  <script>
+    const selectScene = id => {
+      document.querySelectorAll('[data-scene]').forEach(item => item.classList.toggle('active', item.dataset.scene === id));
+      document.querySelector('.control .micro').textContent = `分镜 ${id} · ${id === '01' ? '远景 → 中景' : '待编辑镜头'}`;
+    };
+    document.querySelectorAll('[data-scene]').forEach(item => item.addEventListener('click', () => selectScene(item.dataset.scene)));
+  </script>
+</body>
+</html>

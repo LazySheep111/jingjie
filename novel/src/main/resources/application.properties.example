@@ -1,0 +1,52 @@
+server.port=8081
+
+# AI assistant persistence. Redis is used for the one-hour session cache and Stream queue.
+spring.redis.host=localhost
+spring.redis.port=6379
+assistant.persistence.poll-ms=1000
+
+# Upload limits must cover the 20 MB storyboard frame and 500 MB user video limits.
+spring.servlet.multipart.max-file-size=500MB
+spring.servlet.multipart.max-request-size=510MB
+
+# Uploaded novel source files (TXT/DOCX)
+novel.import-dir=uploads/novels
+novel.import.max-bytes=52428800
+asset.extract.processing-timeout-ms=600000
+
+ai.api-key=replace-with-your-api-key
+ai.api-url=https://api.deepseek.com/chat/completions
+ai.api-model=replace-with-your-model
+# Prefer JSON Schema structured output; incompatible providers fall back automatically.
+ai.structured-output.enabled=true
+# 32-byte UTF-8 key used to encrypt model-management API keys at rest.
+ai.config.encryption-key=${AI_CONFIG_ENCRYPTION_KEY:}
+
+# OpenAI-compatible image generation endpoint
+image.api-key=replace-with-your-image-api-key
+image.api-url=https://example.com/v1/images/generations
+image.api-model=replace-with-your-image-model
+image.local-dir=uploads/assets
+image.reference-url=https://your-public-domain.example.com/images/three-view-reference.png
+image.storyboard-frame-dir=uploads/storyboard-frames
+
+# Video generation provider: ark or minimax
+video.generation.enabled=false
+video.generation.provider=minimax
+video.generation.endpoint=https://api.minimaxi.com/v2/video_generation
+video.generation.query-url=https://api.minimaxi.com/v2/query/video_generation/{taskId}
+video.generation.api-key=replace-with-your-ark-api-key
+video.generation.minimax-api-key=replace-with-your-minimax-api-key
+video.generation.model=MiniMax-H3
+video.generation.download-dir=uploads/videos
+video.generation.image-base-url=https://your-public-domain.example.com
+video.generation.poll-interval-ms=2000
+video.generation.timeout-ms=1800000
+
+spring.datasource.url=jdbc:mysql://localhost:3306/novel_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+spring.datasource.username=replace-with-your-username
+spring.datasource.password=replace-with-your-password
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+mybatis.mapper-locations=classpath:mappers/*.xml
+mybatis.type-aliases-package=com.novelgeneration.novel.entity

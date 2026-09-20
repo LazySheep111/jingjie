@@ -1,0 +1,96 @@
+# -----------------------------------------------------------------------------
+# Local data and machine-specific workspace copies
+# -----------------------------------------------------------------------------
+_tmp_dreamWriter/
+novel-generation/
+.worktrees/
+.agents/
+.superpowers/
+HANDOFFtmd
+HELP.md
+
+# Legacy duplicate source snapshot; the maintained source is under novel/src/main/java.
+novel/mapper/
+
+# Runtime uploads and generated media (novels, assets, frames, videos).
+**/uploads/
+
+# -----------------------------------------------------------------------------
+# Secrets and local configuration
+# -----------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.*.example
+**/src/main/resources/application.properties
+**/src/test/resources/application.properties
+application-local.properties
+application-dev.properties
+application-prod.properties
+*.local.properties
+secrets/
+credentials/
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+
+# Keep safe configuration templates versioned.
+!**/application.properties.example
+
+# -----------------------------------------------------------------------------
+# Java / Maven build output
+# -----------------------------------------------------------------------------
+target/
+**/target/
+build/
+**/build/
+*.class
+*.jar
+!**/maven-wrapper.jar
+
+# -----------------------------------------------------------------------------
+# IDEs and operating-system files
+# -----------------------------------------------------------------------------
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.classpath
+.project
+.settings/
+.factorypath
+.springBeans
+.sts4-cache/
+.apt_generated/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# -----------------------------------------------------------------------------
+# Logs, caches, temporary files, and local databases/backups
+# -----------------------------------------------------------------------------
+*.log
+logs/
+*.tmp
+*.temp
+*.swp
+*.swo
+*.cache
+hs_err_pid*
+replay_pid*
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.bak
+*.sql.gz
+*-backup.sql
+*-dump.sql
+
+# -----------------------------------------------------------------------------
+# Network or tool-specific local settings
+# -----------------------------------------------------------------------------
+.claude/settings.local.json

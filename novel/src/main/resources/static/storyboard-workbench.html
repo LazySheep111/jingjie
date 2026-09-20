@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分镜脚本工作台</title>
+    <script src="/studio/js/legacy-page-redirect.js?v=20260918"></script>
+    <link rel="stylesheet" href="/css/outline.css">
+    <link rel="stylesheet" href="/studio/css/workbench-shell.css?v=20260916">
+    <link rel="stylesheet" href="/studio/css/studio.css">
+</head>
+<body class="studio-theme studio-workbench-page" data-shell-page="storyboard">
+<main class="storyboard-workspace">
+    <div class="toolbar workspace-header"><span class="eyebrow">创作入口</span></div>
+    <section class="workbench-layout workspace-shell">
+        <div class="section-heading"><div><p class="eyebrow">开始创作</p><h1>分镜脚本工作台</h1><p class="hint">导入小说或选择已有作品，继续编辑章节、资产和镜头。</p></div><span class="status">支持 TXT / DOCX</span></div>
+        <div class="import-row"><label>作品名称（可选）<input id="novelImportTitleInput" type="text" placeholder="默认使用文件名"></label><label>小说文件<input id="novelImportFile" type="file" accept=".txt,.docx,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label><button id="novelImportBtn" type="button">上传并进入工作台</button></div>
+        <p id="novelImportStatus" class="status" role="status"></p>
+    </section>
+    <section class="panel workbench-recent-panel"><div class="section-heading"><div><p class="eyebrow">作品上下文</p><h2 id="workbenchTitle">镜头序列</h2></div><div class="card-actions"><button id="refreshRecentBtn" type="button" class="secondary-button">刷新作品</button><span class="asset-meta">选择作品后进入章节编辑</span></div></div><div id="sceneTrack" class="scene-track scene-timeline">正在加载作品…</div><div id="recentNovelList" hidden></div><div id="recentNovelEmpty" hidden></div></section>
+    <section id="sceneEditor" class="panel scene-editor">选择场景以编辑分镜脚本与首帧。</section>
+    <section id="actionDock" class="panel workbench-action-dock"><div id="videoStatus" aria-live="polite">尚未选择首帧<br><small>选择或生成首帧后即可生成视频。</small></div><select id="videoResolution" aria-label="视频分辨率"><option>768P</option><option>1080P</option><option>2K</option></select><button type="button" data-action="generate-video" disabled>生成视频</button></section>
+</main>
+<aside id="studioInspector" class="workbench-page-inspector"><section class="panel"><h2>参考资产</h2><div id="assetInspector">选中镜头后显示人物和场景资产。</div></section><section class="panel"><h2>生成任务</h2><div id="taskInspector">暂无进行中的任务。</div></section></aside>
+<script src="/studio/js/api.js"></script><script src="/js/storyboard-workbench.js"></script><script src="/studio/js/workbench.js"></script><script src="/studio/js/workbench-shell.js?v=20260918b"></script>
+</body>
+</html>

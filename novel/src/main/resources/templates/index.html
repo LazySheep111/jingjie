@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小说大纲生成器</title>
+    <script src="/studio/js/legacy-page-redirect.js?v=20260918"></script>
+    <link rel="stylesheet" href="/css/outline.css">
+    <link rel="stylesheet" href="/studio/css/workbench-shell.css?v=20260916">
+</head>
+<body class="studio-theme studio-outline-page" data-shell-page="outline">
+<nav class="top-nav">
+    <a class="brand" href="/outline">小说创作台</a>
+    <div class="nav-links">
+        <a href="/storyboard-workbench.html">分镜脚本工作台</a>
+        <button id="newCreateBtn" type="button" class="nav-button">新建创作</button>
+        <a href="/asset-library.html">资产库</a>
+        <a href="/history-list.html">我的历史作品</a>
+    </div>
+</nav>
+
+<main class="page workspace-shell outline-workspace-shell">
+    <section class="panel form-panel workspace-brief">
+        <div class="title-block">
+            <p class="eyebrow">小说创作</p>
+            <h1>小说大纲生成器</h1>
+            <p class="hint">填写小说设定后，点击生成按钮，系统会调用 AI 生成小说大纲。</p>
+        </div>
+
+        <form id="outlineForm" class="form">
+            <label>
+                小说名称
+                <input id="novelTitle" type="text" placeholder="例如：星海归途">
+            </label>
+
+            <label>
+                小说类型
+                <input id="category" type="text" placeholder="例如：科幻冒险、玄幻、都市悬疑">
+            </label>
+
+            <div class="grid">
+                <label>
+                    篇幅
+                    <select id="novelLength">
+                        <option value="短篇">短篇</option>
+                        <option value="中篇">中篇</option>
+                        <option value="长篇" selected>长篇</option>
+                    </select>
+                </label>
+
+                <label>
+                    结局类型
+                    <select id="endingType">
+                        <option value="圆满结局">圆满结局</option>
+                        <option value="开放式结局" selected>开放式结局</option>
+                        <option value="悲剧结局">悲剧结局</option>
+                    </select>
+                </label>
+            </div>
+
+            <label>
+                写作风格
+                <input id="writingStyle" type="text" value="节奏紧凑、悬念充足、画面感强">
+            </label>
+
+            <label>
+                目标读者
+                <input id="targetAudience" type="text" placeholder="例如：18-35 岁，喜欢科幻和冒险的读者">
+            </label>
+
+            <label>
+                主角设定
+                <textarea id="protagonist" rows="2" placeholder="例如：林澈，年轻工程师，意外获得古老星舰核心"></textarea>
+            </label>
+
+            <label>
+                配角设定
+                <textarea id="roleList" rows="2" placeholder="例如：苏晚：冷静的舰队指挥官；阿洛：来历不明的人工智能"></textarea>
+            </label>
+
+            <label>
+                时代背景
+                <textarea id="background" rows="2" placeholder="例如：人类进入星际殖民时代，多个星域势力割据"></textarea>
+            </label>
+
+            <label>
+                世界规则
+                <textarea id="worldRule" rows="2" placeholder="例如：星舰需要稀有晶核跃迁，AI 拥有有限自治权"></textarea>
+            </label>
+
+            <label>
+                核心主题
+                <textarea id="theme" rows="2" placeholder="例如：人在未知宇宙中寻找归属与真相"></textarea>
+            </label>
+
+            <label>
+                开篇事件
+                <textarea id="triggerEvent" rows="2" placeholder="例如：主角在废弃空间站发现一艘失踪百年的星舰"></textarea>
+            </label>
+
+            <div class="grid">
+                <label>
+                    伏笔数量
+                    <input id="foreshadowCount" type="number" min="0" value="5">
+                </label>
+
+                <label>
+                    叙事视角
+                    <input id="narrativeView" type="text" value="第三人称">
+                </label>
+            </div>
+
+            <label>
+                规避内容
+                <textarea id="avoidContent" rows="2" placeholder="例如：避免低俗、血腥和过度暴力内容"></textarea>
+            </label>
+
+            <button id="submitBtn" type="submit">生成大纲</button>
+            <p id="statusText" class="status" aria-live="polite"></p>
+        </form>
+    </section>
+
+    <section class="panel result-panel workspace-output">
+        <div class="result-head">
+            <div>
+                <p class="eyebrow">生成结果</p>
+                <h2 id="resultTitle">等待生成</h2>
+            </div>
+            <span id="novelIdBadge" class="badge">未生成</span>
+        </div>
+
+        <div id="emptyResult" class="empty">生成后的小说大纲会显示在这里。</div>
+
+        <div id="outlineResult" class="outline" hidden>
+            <div class="summary">
+                <h3>整体梗概</h3>
+                <p id="overallPlot"></p>
+            </div>
+
+            <div>
+                <h3>伏笔设计</h3>
+                <ul id="foreshadowList"></ul>
+            </div>
+
+            <div>
+                <h3>章节列表</h3>
+                <div id="chapterList" class="chapter-list"></div>
+            </div>
+
+            <div class="result-actions">
+                <button id="generateFullBtn" type="button">确认大纲，生成全文小说</button>
+                <button id="saveOutlineBtn" type="button" class="secondary-button">保存本次大纲至历史记录</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="/js/outline.js"></script>
+<script src="/studio/js/workbench-shell.js?v=20260918b"></script>
+</body>
+</html>

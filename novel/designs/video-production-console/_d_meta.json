@@ -1,0 +1,18 @@
+{
+  "type": "design",
+  "designSystems": [],
+  "primaryDesignSystem": null,
+  "assets": {
+    "video-production-console-preview": {
+      "versions": [
+        {
+          "path": "video-production-console-preview.html",
+          "createdAt": "2026-09-18T05:16:30.155Z",
+          "status": "needs-review"
+        }
+      ]
+    }
+  },
+  "createdAt": "2026-09-18T05:16:30.155Z",
+  "updatedAt": "2026-09-18T05:16:30.155Z"
+}

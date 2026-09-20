@@ -1,0 +1,18 @@
+{
+  "type": "design",
+  "designSystems": [],
+  "primaryDesignSystem": null,
+  "assets": {
+    "ai-assistant-readonly-preview": {
+      "versions": [
+        {
+          "path": "ai-assistant-readonly-preview.html",
+          "createdAt": "2026-09-19T07:59:08.981Z",
+          "status": "needs-review"
+        }
+      ]
+    }
+  },
+  "createdAt": "2026-09-19T07:59:08.991Z",
+  "updatedAt": "2026-09-19T07:59:08.991Z"
+}

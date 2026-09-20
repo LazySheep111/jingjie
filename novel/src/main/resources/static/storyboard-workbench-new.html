@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分镜脚本工作台 · 新版预览</title>
+    <link rel="stylesheet" href="/studio/css/workbench-shell.css?v=20260919f">
+    <link rel="stylesheet" href="/studio/css/storyboard-workbench-new.css?v=20260918e">
+</head>
+<body class="studio-theme studio-workbench-page storyboard-workbench-new-page" data-shell-page="storyboard">
+<a class="storyboard-skip-link" href="#storyboard-stage">跳到当前分镜</a>
+<main class="storyboard-new-workspace" aria-label="分镜脚本工作台">
+    <header class="storyboard-new-header">
+        <div>
+            <p class="storyboard-kicker">AI VIDEO PRODUCTION</p>
+            <h1>分镜脚本工作台</h1>
+            <p class="storyboard-header-copy">将小说章节拆解为镜头，确认参考资产与首帧后生成视频。</p>
+        </div>
+        <span class="storyboard-preview-badge">独立预览页</span>
+    </header>
+
+    <div class="storyboard-cut-layout">
+    <div class="storyboard-new-grid">
+        <aside class="storyboard-context-column" aria-label="作品上下文">
+            <section class="storyboard-panel storyboard-import-panel">
+                <div class="storyboard-panel-heading">
+                    <div>
+                        <p class="storyboard-kicker">01 · 作品入口</p>
+                        <h2>导入小说</h2>
+                    </div>
+                    <span class="storyboard-format-note">TXT / DOCX</span>
+                </div>
+                <label class="storyboard-field" for="novelImportTitleInput">
+                    <span>作品名称 <em>可选</em></span>
+                    <input id="novelImportTitleInput" type="text" placeholder="默认使用文件名">
+                </label>
+                <label class="storyboard-file-picker" for="novelImportFile">
+                    <span class="storyboard-file-picker-title">选择小说文件</span>
+                    <span class="storyboard-file-picker-copy">支持 TXT、DOCX 格式</span>
+                </label>
+                <input id="novelImportFile" class="storyboard-file-input" type="file" accept=".txt,.docx,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                <button id="novelImportBtn" class="storyboard-primary-button" type="button">上传并进入工作台</button>
+                <p id="novelImportStatus" class="storyboard-inline-status" role="status" aria-live="polite"></p>
+            </section>
+
+            <section class="storyboard-panel storyboard-history-panel">
+                <div class="storyboard-panel-heading">
+                    <div>
+                        <p class="storyboard-kicker">02 · 历史作品</p>
+                        <h2>继续创作</h2>
+                    </div>
+                    <button id="refreshRecentBtn" class="storyboard-text-button" type="button">刷新</button>
+                </div>
+                <p class="storyboard-panel-copy">选择作品后进入小说全文页，并继续选择章节。</p>
+                <div id="recentNovelList" class="storyboard-recent-list" aria-live="polite"></div>
+                <p id="recentNovelEmpty" class="empty-copy" hidden>暂无可继续的作品。</p>
+            </section>
+        </aside>
+
+        <section id="storyboard-stage" class="storyboard-stage-column storyboard-current-shot" aria-label="当前分镜">
+            <section class="storyboard-panel storyboard-track-panel">
+                <div class="storyboard-panel-heading storyboard-track-heading">
+                    <div>
+                        <p class="storyboard-kicker">03 · 镜头序列</p>
+                        <h2 id="workbenchTitle">镜头序列</h2>
+                    </div>
+                    <span class="storyboard-track-tip">选择镜头查看脚本</span>
+                </div>
+                <div id="sceneTrack" class="scene-track scene-timeline" role="list" aria-live="polite">正在读取作品与分镜…</div>
+            </section>
+
+            <section class="storyboard-panel storyboard-editor-panel">
+                <div class="storyboard-editor-heading">
+                    <div>
+                        <p class="storyboard-kicker">04 · 当前分镜</p>
+                        <h2>镜头脚本</h2>
+                    </div>
+                    <span class="storyboard-editor-hint">选择镜头后可查看首帧与生成操作</span>
+                </div>
+                <section id="sceneEditor" class="scene-editor" aria-live="polite">
+                    <p class="empty-copy">请选择一个场景以查看分镜脚本。</p>
+                </section>
+            </section>
+        </section>
+    </div>
+
+<aside id="studioInspector" class="storyboard-generation-sidebar storyboard-output-rail" aria-label="资产与生成控制">
+    <section class="storyboard-panel storyboard-assets-panel">
+        <div class="storyboard-panel-heading">
+            <div>
+                <p class="storyboard-kicker">05 · 参考资产</p>
+                <h2>人物与场景</h2>
+            </div>
+        </div>
+        <div id="assetInspector" class="storyboard-asset-list" aria-live="polite">
+            <p class="empty-copy">选中镜头后显示关联的人物和场景资产。</p>
+        </div>
+    </section>
+
+    <section id="actionDock" class="storyboard-panel storyboard-generation-panel" aria-label="视频生成控制">
+        <div class="storyboard-panel-heading">
+            <div>
+                <p class="storyboard-kicker">06 · 视频输出</p>
+                <h2>生成控制</h2>
+            </div>
+            <span class="storyboard-generation-state">等待首帧</span>
+        </div>
+        <div id="videoStatus" class="storyboard-video-status" role="status" aria-live="polite">
+            尚未选择首帧
+            <small>生成或上传首帧后，即可生成视频。</small>
+        </div>
+        <label class="storyboard-field" for="videoResolution">
+            <span>视频分辨率</span>
+            <select id="videoResolution" aria-label="视频分辨率">
+                <option>768P</option>
+                <option>1080P</option>
+                <option>2K</option>
+            </select>
+        </label>
+        <button type="button" class="storyboard-primary-button storyboard-video-button" data-action="generate-video" disabled>生成视频</button>
+    </section>
+
+    <section class="storyboard-panel storyboard-task-panel">
+        <div class="storyboard-panel-heading">
+            <div>
+                <p class="storyboard-kicker">生成监控</p>
+                <h2>任务状态</h2>
+            </div>
+        </div>
+        <div id="taskInspector" class="storyboard-task-copy">
+            生成进度、失败原因和重试操作会显示在上方“生成控制”中。
+        </div>
+    </section>
+</aside>
+    </div>
+</main>
+
+<script src="/studio/js/api.js"></script>
+<script src="/js/storyboard-workbench.js"></script>
+<script src="/studio/js/workbench.js"></script>
+<script src="/studio/js/workbench-shell.js?v=20260918c"></script>
+<link rel="stylesheet" href="/studio/css/assistant-panel.css?v=20260919g">
+<script src="/studio/js/assistant-panel.js?v=20260919g"></script>
+</body>
+</html>

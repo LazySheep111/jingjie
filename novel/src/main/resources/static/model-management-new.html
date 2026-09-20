@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模型管理 · 新版预览</title>
+    <link rel="stylesheet" href="/studio/css/workbench-shell.css?v=20260919f">
+    <link rel="stylesheet" href="/studio/css/workbenches-new.css?v=20260918e">
+</head>
+<body class="studio-theme new-workbench-page" data-shell-page="model">
+<main>
+    <header class="new-workbench-header">
+        <div><p class="new-workbench-kicker">系统设置 / 模型路由</p><h1>模型管理</h1><p class="hint">为文本、图像和视频创作绑定服务商。API Key 仅以加密形式保存在服务端。</p></div>
+        <span class="badge">密钥加密存储</span>
+    </header>
+    <section class="model-overview new-model-overview" aria-label="模型配置概览"><div><span class="new-workbench-help">配置槽位</span><strong>3</strong><span>文本 · 图像 · 视频</span></div><div><span class="new-workbench-help">配置优先级</span><strong>数据库</strong><span>未配置时回退系统参数</span></div><div><span class="new-workbench-help">测试策略</span><strong>低成本</strong><span>仅验证连接可达性</span></div></section>
+    <p id="modelPageStatus" class="model-page-status" role="status" aria-live="polite" hidden></p>
+    <section class="model-config-console"><section id="modelConfigGrid" class="model-config-grid" aria-label="AI 模型配置"><div class="new-workbench-empty">正在读取模型配置…</div></section></section>
+    <p class="new-workbench-help">保存前会自动执行连接测试。测试失败不会覆盖当前启用配置；首次保存前需在服务端配置 <code>AI_CONFIG_ENCRYPTION_KEY</code>。</p>
+</main>
+<script src="/studio/js/api.js"></script>
+<script src="/studio/js/model-management.js"></script>
+<script src="/studio/js/workbench-shell.js?v=20260918c"></script>
+</body>
+</html>

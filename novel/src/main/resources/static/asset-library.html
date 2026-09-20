@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人物与场景资产库</title>
+    <script src="/studio/js/legacy-page-redirect.js?v=20260918"></script>
+    <link rel="stylesheet" href="/css/outline.css">
+    <link rel="stylesheet" href="/studio/css/workbench-shell.css?v=20260916">
+</head>
+<body class="studio-theme studio-asset-library-page" data-shell-page="assets">
+<main class="asset-library-page">
+    <div class="toolbar workspace-header">
+        <div><p class="eyebrow">视觉资产管理</p><h1>人物与场景资产库</h1><p class="hint">集中查看不同作品中的人物、场景和三视图资产。</p><a href="/asset-library.html" class="asset-meta">资产库</a></div>
+        <p id="assetStatus" class="status" role="status" aria-live="polite"></p>
+    </div>
+    <section class="asset-library-layout workspace-shell">
+        <aside class="panel asset-library-sidebar"><h2>作品筛选</h2><label class="asset-library-search">搜索作品<input id="novelSearchInput" type="search" placeholder="输入作品名称"></label><div id="novelFilterList" class="novel-filter-list"></div></aside>
+        <section class="panel asset-library-main"><div class="asset-library-toolbar"><div><h2>资产列表</h2><span id="assetResultSummary" class="asset-meta">正在加载</span></div><div class="asset-library-filters"><input id="assetSearchInput" type="search" placeholder="搜索人物或场景"><select id="assetTypeFilter" aria-label="资产类型"><option value="">全部</option><option value="CHARACTER">人物</option><option value="LOCATION">场景</option></select><button id="assetSearchBtn" type="button">搜索</button></div></div><div id="assetGrid" class="asset-grid"></div><div id="assetEmpty" class="asset-library-empty" hidden>暂无符合条件的资产。</div><div id="assetPagination" class="asset-library-pagination"></div></section>
+        <aside id="assetDetailPanel" class="panel asset-library-detail"><div class="asset-detail-empty">点击资产卡片查看详情。</div></aside>
+    </section>
+</main>
+<div id="assetReuseModal" class="asset-library-modal" hidden role="dialog" aria-modal="true" aria-label="覆盖目标资产"><div class="asset-library-modal-content"><div class="asset-library-modal-head"><h2>覆盖目标资产</h2><button id="closeReuseBtn" type="button" class="secondary-button" aria-label="关闭">×</button></div><p id="reuseAssetName" class="asset-meta"></p><label>目标作品<select id="reuseNovelSelect"></select></label><label>目标章节<select id="reuseChapterSelect"></select></label><label>资产角色<select id="reuseRoleSelect"><option value="CHARACTER">人物</option><option value="LOCATION">场景</option></select></label><label>目标资产<select id="reuseAssetSelect"></select></label><p id="reuseStatus" class="status"></p><div class="card-actions"><button id="submitReuseBtn" type="button">确认覆盖</button><button id="cancelReuseBtn" type="button" class="secondary-button">取消</button></div></div></div>
+<div id="assetImagePreviewModal" class="image-preview-modal" hidden role="dialog" aria-modal="true" aria-label="资产图片预览"><button id="closeAssetImageBtn" class="image-preview-close" type="button" aria-label="关闭预览">×</button><img id="assetImagePreview" class="image-preview" alt="资产三视图预览"></div>
+<script src="/js/asset-library.js"></script><script src="/studio/js/workbench-shell.js?v=20260918b"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分镜视频生成</title>
+    <script src="/studio/js/legacy-page-redirect.js?v=20260918"></script>
+    <link rel="stylesheet" href="/css/outline.css">
+    <link rel="stylesheet" href="/studio/css/workbench-shell.css?v=20260916">
+</head>
+<body class="studio-theme studio-video-page video-generation-body" data-shell-page="video">
+<nav class="top-nav">
+    <a class="brand" href="/outline">小说创作台</a>
+    <div class="nav-links">
+        <a href="/storyboard-workbench.html">分镜脚本工作台</a>
+        <a href="/outline">新建创作</a>
+        <a href="/asset-library.html">资产库</a>
+        <a href="/history-list.html">我的历史作品</a>
+    </div>
+</nav>
+
+<main class="video-page">
+    <div class="toolbar workspace-header">
+        <div>
+            <p class="eyebrow">视频创作</p>
+            <h1 id="pageTitle">分镜视频生成</h1>
+            <p id="pageSummary" class="asset-meta"></p>
+        </div>
+        <div class="card-actions">
+            <button id="backDetailBtn" type="button" class="secondary-button">返回小说正文</button>
+        </div>
+    </div>
+    <p id="pageStatus" class="status" aria-live="polite"></p>
+    <div id="sceneList" class="video-scene-list workspace-shell video-output-console"></div>
+    <div id="pageEmpty" class="storyboard-empty">请先在历史作品中选择小说，再继续视频生成。</div>
+</main>
+
+<dialog id="firstFramePreviewDialog" class="image-preview-dialog" aria-labelledby="firstFramePreviewTitle">
+    <div class="image-preview-panel">
+        <div class="image-preview-heading">
+            <h2 id="firstFramePreviewTitle">分镜首帧预览</h2>
+            <button id="closeFirstFramePreview" type="button" class="secondary-button">关闭</button>
+        </div>
+        <img id="firstFramePreviewImage" alt="分镜首帧大图预览">
+    </div>
+</dialog>
+
+<script src="/js/video-generation.js"></script>
+<script src="/studio/js/workbench-shell.js?v=20260918b"></script>
+</body>
+</html>

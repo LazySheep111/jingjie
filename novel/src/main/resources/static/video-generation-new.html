@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频创作工作台 · 新版预览</title>
+    <link rel="stylesheet" href="/studio/css/workbench-shell.css?v=20260919f">
+    <link rel="stylesheet" href="/studio/css/workbenches-new.css?v=20260918r">
+</head>
+<body class="studio-theme new-workbench-page" data-shell-page="video">
+<main class="new-video-stage">
+    <header class="new-workbench-header">
+        <div class="video-title-block">
+            <p class="new-workbench-kicker">视频制作</p>
+            <label id="chapterPickerWrap" class="video-chapter-picker" hidden>
+                <span>选择章节</span>
+                <select id="chapterSelect" aria-label="选择章节"></select>
+            </label>
+            <p id="pageSummary" class="hint"></p>
+        </div>
+        <div class="card-actions">
+            <button id="backDetailBtn" type="button" class="secondary-button">返回小说正文</button>
+        </div>
+    </header>
+    <section class="new-workbench-panel">
+        <div class="new-workbench-toolbar"><div><h2>分镜制作序列</h2><p class="new-workbench-help">选择一个分镜，完成首帧与视频生成。</p></div><p id="pageStatus" class="status" aria-live="polite"></p></div>
+        <div id="pageEmpty" class="new-workbench-empty">请先在历史作品中选择小说，再继续视频生成。</div>
+        <section class="video-production-list"><div id="sceneList" class="video-scene-list"></div></section>
+    </section>
+</main>
+<dialog id="firstFramePreviewDialog" aria-labelledby="firstFramePreviewTitle"><div class="image-preview-panel"><div class="new-workbench-toolbar"><h2 id="firstFramePreviewTitle">分镜首帧预览</h2><button id="closeFirstFramePreview" type="button" class="secondary-button">关闭</button></div><img id="firstFramePreviewImage" class="image-preview" alt="分镜首帧大图预览"></div></dialog>
+<script src="/js/video-generation.js"></script>
+<script src="/studio/js/workbench-shell.js?v=20260918c"></script>
+<link rel="stylesheet" href="/studio/css/assistant-panel.css?v=20260919g">
+<script src="/studio/js/assistant-panel.js?v=20260919g"></script>
+</body>
+</html>

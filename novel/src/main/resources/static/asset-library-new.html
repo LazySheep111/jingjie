@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资产库 · 新版预览</title>
+    <link rel="stylesheet" href="/studio/css/workbench-shell.css?v=20260919f">
+    <link rel="stylesheet" href="/studio/css/workbenches-new.css?v=20260918j">
+</head>
+<body class="studio-theme new-workbench-page" data-shell-page="assets">
+<main>
+    <header class="new-workbench-header">
+        <div><p class="new-workbench-kicker">视觉资产管理</p><h1>人物与场景资产库</h1><p class="hint">集中检索作品人物、场景与三视图资产。</p></div>
+        <p id="assetStatus" class="status" role="status" aria-live="polite"></p>
+    </header>
+    <section class="asset-search-workspace">
+        <aside class="new-workbench-panel asset-filter-rail">
+            <div class="new-workbench-toolbar"><div><h2>检索范围</h2><p class="new-workbench-help">按作品、类型或关键词定位资产。</p></div></div>
+            <label>作品搜索<input id="novelSearchInput" type="search" placeholder="输入作品名称"></label>
+            <div id="novelFilterList" class="novel-filter-list" aria-label="作品筛选"></div>
+            <label>关键词<input id="assetSearchInput" type="search" placeholder="搜索人物或场景"></label>
+            <label>资产类型<select id="assetTypeFilter" aria-label="资产类型"><option value="">全部资产</option><option value="CHARACTER">人物</option><option value="LOCATION">场景</option></select></label>
+            <button id="assetSearchBtn" type="button">搜索资产</button>
+        </aside>
+        <section class="new-workbench-panel asset-library-main">
+            <div class="asset-library-toolbar">
+                <div class="new-workbench-toolbar"><div><p class="eyebrow">视觉资产库</p><h2>全部资产</h2><span id="assetResultSummary" class="asset-meta">正在加载</span></div></div>
+            </div>
+            <div id="assetGrid" class="asset-grid"></div>
+            <div id="assetEmpty" class="new-workbench-empty" hidden>暂无符合条件的资产。</div>
+            <div id="assetPagination" class="asset-library-pagination"></div>
+        </section>
+        <aside id="assetDetailPanel" class="new-workbench-panel asset-library-detail asset-detail-drawer"><div class="asset-detail-empty">选择一项资产查看描述、提示词和复用操作。</div></aside>
+    </section>
+</main>
+<div id="assetReuseModal" class="asset-library-modal" hidden role="dialog" aria-modal="true" aria-label="覆盖目标资产"><div class="asset-library-modal-content"><div class="new-workbench-toolbar"><h2>覆盖目标资产</h2><button id="closeReuseBtn" type="button" class="secondary-button" aria-label="关闭">关闭</button></div><p id="reuseAssetName" class="asset-meta"></p><label>目标作品<select id="reuseNovelSelect"></select></label><label>目标章节<select id="reuseChapterSelect"></select></label><label>资产角色<select id="reuseRoleSelect"><option value="CHARACTER">人物</option><option value="LOCATION">场景</option></select></label><label>目标资产<select id="reuseAssetSelect"></select></label><p id="reuseStatus" class="status" aria-live="polite"></p><div class="card-actions"><button id="submitReuseBtn" type="button">确认覆盖</button><button id="cancelReuseBtn" type="button" class="secondary-button">取消</button></div></div></div>
+<div id="assetImagePreviewModal" class="image-preview-modal" hidden role="dialog" aria-modal="true" aria-label="资产图片预览"><button id="closeAssetImageBtn" class="secondary-button" type="button" aria-label="关闭预览">关闭</button><img id="assetImagePreview" class="image-preview" alt="资产三视图预览"></div>
+<script src="/js/asset-library.js"></script>
+<script src="/studio/js/workbench-shell.js?v=20260918c"></script>
+<link rel="stylesheet" href="/studio/css/assistant-panel.css?v=20260919g">
+<script src="/studio/js/assistant-panel.js?v=20260919g"></script>
+</body>
+</html>
