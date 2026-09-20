@@ -70,7 +70,7 @@ AI 助手包含项目内实现的只读工具注册与调用逻辑。LangChain4j
    Copy-Item .\src\main\resources\application.properties.example .\src\main\resources\application.properties
    ```
 
-3. 在本机创建 MySQL 数据库，并启动 MySQL、Redis。按需执行 `src/main/resources/sql/` 中的建表/迁移脚本；不要把真实业务数据导出到仓库。
+3. 启动 MySQL、Redis，并先执行 `src/main/resources/sql/init_novel_db.sql` 初始化数据库。该脚本会创建并切换到 `novel_db`，仅创建不存在的表，不导入或删除业务数据。升级已有数据库时，不要重复运行初始化脚本代替迁移；只执行尚未应用的对应迁移脚本。不要把真实业务数据导出到仓库。
 
 4. 编辑本地 `application.properties`，至少配置数据库、Redis 和文本模型；图片、视频生成按需配置。该文件已被忽略规则排除，不要使用 `git add -f` 强行加入版本库。
 
@@ -112,7 +112,13 @@ AI 助手包含项目内实现的只读工具注册与调用逻辑。LangChain4j
 
 ## 数据库脚本
 
-建表及迁移脚本位于 `novel/src/main/resources/sql/`。首次运行前，请根据所使用的数据库状态执行所需脚本；已有数据库升级时，只运行尚未应用的迁移。执行前请备份数据库，并检查脚本中的表名和变更内容。当前仓库没有统一的一键数据库初始化命令。
+数据库脚本位于 `novel/src/main/resources/sql/`：
+
+- `init_novel_db.sql`：新环境首次初始化脚本，自动执行 `CREATE DATABASE IF NOT EXISTS novel_db` 并切换到该库，随后以 `CREATE TABLE IF NOT EXISTS` 创建项目所需的全部 18 张表。可重复执行，不包含业务数据，也不会删除或覆盖已有表。
+- `create_*.sql`：按功能拆分的建表脚本，供单独部署或检查时参考。
+- `alter_*.sql`：已有数据库的增量迁移脚本。升级时只执行尚未应用的迁移，不要把迁移脚本当作新环境初始化脚本重复执行。
+
+建议使用 MySQL 8.x 执行初始化脚本。执行前仍应确认目标实例和数据库名称正确；不要将包含业务数据的数据库导出文件提交到仓库。
 
 ## 测试
 
