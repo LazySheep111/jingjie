@@ -60,7 +60,7 @@ AI 助手包含项目内实现的只读工具注册与调用逻辑。LangChain4j
 1. 克隆仓库并进入主应用目录：
 
    ```powershell
-   git clone git@github.com:LazySheep111/jingjie.git
+   git clone --branch github-clean https://github.com/LazySheep111/jingjie.git
    Set-Location .\jingjie\novel
    ```
 
@@ -72,7 +72,7 @@ AI 助手包含项目内实现的只读工具注册与调用逻辑。LangChain4j
 
 3. 在本机创建 MySQL 数据库，并启动 MySQL、Redis。按需执行 `src/main/resources/sql/` 中的建表/迁移脚本；不要把真实业务数据导出到仓库。
 
-4. 编辑本地 `application.properties`，配置数据库、Redis、文本模型，以及需要使用的图片/视频服务。该文件已被忽略规则排除，不要使用 `git add -f` 强行加入版本库。
+4. 编辑本地 `application.properties`，至少配置数据库、Redis 和文本模型；图片、视频生成按需配置。该文件已被忽略规则排除，不要使用 `git add -f` 强行加入版本库。
 
 5. 在 `novel/` 目录构建或运行：
 
@@ -85,16 +85,30 @@ AI 助手包含项目内实现的只读工具注册与调用逻辑。LangChain4j
 
 配置项名称和用途请参考 `novel/src/main/resources/application.properties.example`。示例中的密钥、用户名、密码和服务地址均为占位值；请在本地替换，不要把真实值粘贴到 README、问题截图或提交记录中。
 
-### 常用配置项
+### 配置项清单
 
-| 配置 | 用途 |
-| --- | --- |
-| `spring.datasource.*` | MySQL 地址与账号 |
-| `spring.redis.host`、`spring.redis.port` | Redis 连接 |
-| `ai.api-key`、`ai.api-url`、`ai.api-model` | 文本模型服务 |
-| `image.*` | 图片生成服务与本地资源目录 |
-| `video.generation.*` | 视频服务商、模型、密钥和任务参数 |
-| `ai.config.encryption-key` | 模型管理中 API Key 的加密密钥 |
+| 配置项 | 何时需要 | 说明 |
+| --- | --- | --- |
+| `spring.datasource.url` | 必填 | MySQL JDBC 地址、数据库名及时区；先创建数据库并执行所需 SQL 脚本。 |
+| `spring.datasource.username`、`spring.datasource.password` | 必填 | MySQL 用户名和密码。建议使用权限受限的应用专用账号，不要提交真实密码。 |
+| `spring.datasource.driver-class-name` | 必填 | MySQL 驱动，模板值为 `com.mysql.cj.jdbc.Driver`。 |
+| `spring.redis.host`、`spring.redis.port` | 必填 | 聊天会话缓存及异步消息使用 Redis。默认 `localhost:6379`。 |
+| `spring.redis.password` | 仅 Redis 开启认证时 | 模板默认未设置；如 Redis 有密码，在本地配置文件中增加此项。 |
+| `ai.api-key`、`ai.api-url`、`ai.api-model` | 必填 | 文本生成服务。默认 URL 指向 DeepSeek 兼容接口；填写当前有效的 API Key 和账户可用模型名。 |
+| `ai.config.encryption-key` | 使用模型管理保存 API Key 时必填 | 用于加密数据库中保存的模型密钥，必须是 **32 字节 UTF-8**。模板通过环境变量 `AI_CONFIG_ENCRYPTION_KEY` 读取。设置后应妥善备份并保持稳定；更换它前需先迁移/重新加密已存密钥，否则旧密钥无法解密。 |
+| `image.api-key`、`image.api-url`、`image.api-model` | 使用 AI 图片/首帧/资产图生成时 | 图片服务商凭据、生成接口和模型；服务需兼容项目当前使用的图片 API 格式。 |
+| `image.reference-url` | 使用参考图/三视图合成时 | 可由图片服务访问的参考图地址；按部署环境填写可访问的 URL。 |
+| `image.local-dir`、`image.storyboard-frame-dir` | 可选 | 生成图片和分镜首帧的本地保存目录，模板默认位于 `uploads/`。请确保应用有写入权限；目录内容不要提交。 |
+| `video.generation.enabled` | 使用视频生成时 | 默认 `false`。确认服务商、模型和回调/查询配置可用后再改为 `true`。 |
+| `video.generation.provider`、`endpoint`、`query-url`、`model` | 使用视频生成时 | 服务商只能是 `ark` 或 `minimax`；按所选服务商填写提交地址、任务查询地址和模型名。查询 URL 中保留 `{taskId}` 占位符。 |
+| `video.generation.api-key` | `provider=ark` 时 | Ark 视频服务 API Key。 |
+| `video.generation.minimax-api-key` | `provider=minimax` 时 | MiniMax 视频服务 API Key。只配置当前所选服务商的有效密钥。 |
+| `video.generation.image-base-url` | 视频服务需要读取本地首帧时 | 应是视频服务可访问的公网基础地址；仅本机 `localhost` 通常不可被外部服务访问。 |
+| `video.generation.download-dir` | 可选 | 生成视频的本地保存目录，模板默认位于 `uploads/videos`。 |
+
+**最小启动配置**：MySQL、Redis、文本模型（`ai.api-key`、`ai.api-url`、`ai.api-model`）。图片和视频服务是可选项；不配置视频时保持 `video.generation.enabled=false`。如果 Redis 开启了密码认证，再增加 `spring.redis.password`。
+
+本地配置模板位于 `novel/src/main/resources/application.properties.example`。不要将真实 Key 或密码写入 README、截图、聊天记录或 Git 提交中。生产环境优先使用环境变量/密钥管理服务；模型管理加密密钥 `AI_CONFIG_ENCRYPTION_KEY` 不要与数据库或 AI API Key 共用。
 
 ## 数据库脚本
 
